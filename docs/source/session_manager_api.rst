@@ -41,11 +41,12 @@ user_id
 
 sector_identifier
     A possible sector identifier to be used when constructing a pairwise
-    subject identifier
+    subject identifier. If sub_type is *pairwise* then sector_identifier MUST
+    be present.
 
 sub_type
     The type of subject identifier that should be constructed. It can either be
-    *pairwise* or *public*.
+    *pairwise*, *public* or *ephemeral*.
 
 So a typical command would look like this::
 
@@ -59,13 +60,62 @@ add_grant
 ---------
 .. _add_grant:
 
-add_grant(self, user_id, client_id, **kwargs)
+Creates and adds a grant to a user session.
+Method parameters:
+
+user_id
+    User identifier
+
+client_id
+    Client identifier
+
+kwargs
+    Keyword arguments to the Grant class initialization
+
+.. code-block:: Python
+
+    authn_event = create_authn_event('diana')
+    session_manager.create_session(authn_event=authn_event,
+                                   auth_req=AUTH_REQ,
+                                   user_id='diana',
+                                   client_id="client_1")
+
+    grant = self.session_manager.add_grant(
+        user_id="diana", client_id="client_1",
+        scope=["openid", "phoe"],
+        claims={"userinfo": {"given_name": None}})
+
+    assert grant.scope == ["openid", "phoe"]
+
+    _grant = self.session_manager.get(['diana', 'client_1', grant.id])
+    assert _grant.scope == ["openid", "phoe"]
 
 find_token
 ----------
 .. _find_token:
 
-find_token(self, session_id, token_value)
+Finds a specific token belonging to a session.
+
+.. code-block:: Python
+
+    session_manager.create_session(authn_event=authn_event,
+                                   auth_req=AUTH_REQ,
+                                   user_id='diana',
+                                   client_id="client_1")
+
+    grant = session_manager.add_grant(user_id="diana",
+                                      client_id="client_1")
+
+    code = grant.mint_token("authorization_code", value="ABCD")
+    access_token = grant.mint_token("access_token", value="007", based_on=code)
+
+    _session_key = session_key('diana', 'client_1', grant.id)
+    _token = self.session_manager.find_token(_session_key, access_token.value)
+
+    assert _token.type == "access_token"
+    assert _token.id == access_token.id
+
+
 
 get_authentication_event
 ------------------------
