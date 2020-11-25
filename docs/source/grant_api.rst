@@ -155,6 +155,10 @@ get_token
 ---------
 .. _get_token:
 
+Among all the tokens that has been minted using this specific grant, find
+the one that matches the value given.
+Takes only one argument: the value.
+
 .. code-block::
 
     from oidcendpoint.grant import Grant
@@ -168,6 +172,19 @@ revoke_token
 ------------
 .. _revoke_token:
 
+Mark the token as revoked.
+Takes three arguments:
+
+value
+    The token value
+
+based_on:
+    A token index
+
+recursive:
+    A boolean. If true it means that all descendants of a token
+    that matches the search criteria will be also marked as revoked.
+
 .. code-block::
 
     from oidcendpoint.grant import Grant
@@ -179,6 +196,15 @@ revoke_token
 
     assert code.is_active() is True
     assert access_token.is_active() is False
+
+    access_token_2 = grant.mint_token("access_token",
+                                      value="0987", based_on=code)
+
+    grant.revoke_token(value=code.value, recursive=True)
+
+    assert code.is_active() is False
+    assert access_token_2.is_active() is False
+
 
 
 
