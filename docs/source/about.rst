@@ -4,6 +4,27 @@
 About session management
 ========================
 
+The Session Management subsystem are designed to support a couple of
+different services:
+
+Single Logout
+    Described in a set of specifications
+        - `Session Management`_
+        - `Back-Channel Logout`_
+        - `RP-Initiated Logout`_
+        - `Front-Channel Logout`_
+
+Authorization management
+    Information about which tokens can be issued and what they are
+    supposed to be used for and by whom, must be stored somewhere.
+
+`OAuth 2.0 Rich Authorization Requests`_
+    Allows clients to specify their fine-grained authorization
+    requirements using the expressiveness of JSON data structures.
+
+Token exchange
+    As described in `RFC 8693`_ - OAuth 2.0 Token Exchange
+
 The OIDC Session Management draft defines session to be:
 
     Continuous period of time during which an End-User accesses a Relying
@@ -47,3 +68,10 @@ possibly other types of tokens) in a comprehensive way. More about that below.
 
 There may be many Relying Parties below a user and many grants below a
 Relying Party.
+
+.. _`Session Management`: https://openid.net/specs/openid-connect-session-1_0.html
+.. _`Back-Channel Logout`: https://openid.net/specs/openid-connect-backchannel-1_0.html
+.. _`RP-Initiated Logout`: https://openid.net/specs/openid-connect-rpinitiated-1_0.html
+.. _`Front-Channel Logout`: https://openid.net/specs/openid-connect-frontchannel-1_0.html
+.. _`RFC 8693`: https://tools.ietf.org/html/rfc8693
+.. _`OAuth 2.0 Rich Authorization Requests`: https://tools.ietf.org/html/draft-ietf-oauth-rar-03

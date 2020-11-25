@@ -9,12 +9,8 @@ Session Manager API
     - `find_token`_
     - `get_authentication_event`_
     - `get_client_session_info`_
-    - `get_grant_by_response_type`_
     - `get_session_info`_
     - `get_session_info_by_token`_
-    - `get_sids_by_user_id`_
-    - `get_user_info`_
-    - `grants`_
     - `revoke_client_session`_
     - `revoke_grant`_
     - `revoke_token`_
@@ -130,12 +126,6 @@ get_client_session_info
 
 get_client_session_info(self, session_id)
 
-get_grant_by_response_type
---------------------------
-.. _get_grant_by_response_type:
-
-get_grant_by_response_type(self, user_id, client_id)
-
 get_session_info
 ----------------
 .. _get_session_info:
@@ -147,24 +137,6 @@ get_session_info_by_token
 .. _get_session_info_by_token:
 
 get_session_info_by_token(self, token_value)
-
-get_sids_by_user_id
--------------------
-.. _get_sids_by_user_id:
-
-get_sids_by_user_id(self, user_id)
-
-get_user_info
--------------
-.. _get_user_info:
-
-get_user_info(self, uid)
-
-grants
-------
-.. _grants:
-
-grants(self, session_id)
 
 revoke_client_session
 ---------------------
