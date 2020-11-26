@@ -5,10 +5,10 @@ About session management
 ========================
 
 The Session Management subsystem are designed to support a couple of
-different services:
+different services that we have in the system as it is:
 
 Single Logout
-    Described in a set of specifications
+    Described in a set of specifications:
         - `Session Management`_
         - `Back-Channel Logout`_
         - `RP-Initiated Logout`_
@@ -16,14 +16,21 @@ Single Logout
 
 Authorization management
     Information about which tokens can be issued and what they are
-    supposed to be used for and by whom, must be stored somewhere.
+    supposed to be used for and by whom, must be managed somewhere.
+
+Token exchange
+    As described in `RFC 8693`_ - OAuth 2.0 Token Exchange
+
+And some new functionality that we might want to support:
 
 `OAuth 2.0 Rich Authorization Requests`_
     Allows clients to specify their fine-grained authorization
     requirements using the expressiveness of JSON data structures.
 
-Token exchange
-    As described in `RFC 8693`_ - OAuth 2.0 Token Exchange
+`FAPI Grant management`_
+    Wants to extend OAuth to include explicit representation of grants in
+    the OAuth protocol.
+
 
 The OIDC Session Management draft defines session to be:
 
@@ -75,3 +82,4 @@ Relying Party.
 .. _`Front-Channel Logout`: https://openid.net/specs/openid-connect-frontchannel-1_0.html
 .. _`RFC 8693`: https://tools.ietf.org/html/rfc8693
 .. _`OAuth 2.0 Rich Authorization Requests`: https://tools.ietf.org/html/draft-ietf-oauth-rar-03
+.. _`FAPI Grant Management`: https://bitbucket.org/openid/fapi/src/master/Financial_API_Grant_Management.md
