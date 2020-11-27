@@ -2,21 +2,13 @@
 Grant API
 =========
 
-    - max_usage_reached_
     - is_active_
+    - max_usage_reached_
     - revoke_
-    - update_
-    - replace_
     - mint_token_
     - get_token_
-    _ revoke_token_
-
-max_usage_reached
------------------
-.. _max_usage_reached:
-
-If there is an upper limit as to how many times a grant can be used to mint
-new tokens this method will tell you if that limit has been reached.
+    - revoke_token_
+    - get_spec_
 
 is_active
 ---------
@@ -26,90 +18,19 @@ There might be several reasons why a grant can not be used to mint new tokens.
 It may have expires, been revoked or have reached its max usage limit. This
 method will tell you if any of those limits has been reached.
 
+max_usage_reached
+-----------------
+.. _max_usage_reached:
+
+If there is an upper limit as to how many times a grant can be used to mint
+new tokens this method will tell you if that limit has been reached.
+
 revoke
 ------
 .. _revoke:
 
 Will revoke a grant. Does not necessarily mean that all the tokens that has
 been minted by this grant also will be revoked.
-
-update
-------
-.. _update:
-
-Will update information in the grant. This can only be used for the parameters:
-
-    - authorization_details
-    - claims
-    - resources
-    - scope
-
-authorization_details and claims are dictionaries while resources and scope are
-lists.
-
-Thus if you want to update the claims specification you can do like this:
-
-.. code-block:: python
-    :linenos:
-
-    from oidcendpoint.grant import Grant
-
-    grant = Grant()
-    user_info_claims = {"given_name": None, "email": None}
-    grant.update(claims={"userinfo": user_info_claims})
-
-    id_token_claims = {"email": None}
-    grant.update(claims={"id_token": id_token_claims})
-
-    introspection_claims = {"affiliation": None}
-    grant.update(claims={"introspection": introspection_claims})
-
-    assert set(grant.claims.keys()) == {"userinfo", "id_token", "introspection"}
-
-If it is about resources it will be much the same:
-
-.. code-block:: python
-    :linenos:
-
-    from oidcendpoint.grant import Grant
-
-    grant = Grant()
-    grant.update(resources=["https://api.example.com"])
-    assert grant.resources == ["https://api.example.com"]
-
-    grant.update(resources=["https://api.example.com",
-                            "https://api.example.org"])
-
-    assert set(grant.resources) == {"https://api.example.com",
-                                    "https://api.example.org"}
-
-
-replace
--------
-.. _replace:
-
-Replaces whatever value there is on the parameter with something new.
-As with update this can used on the parameters:
-
-    - authorization_details
-    - claims
-    - resources
-    - scope
-
-Code example:
-
-.. code-block:: python
-    :linenos:
-
-    from oidcendpoint.grant import Grant
-
-    grant = Grant()
-    grant.update(resources= ["https://api.example.com"])
-    print(grant.resources == ["https://api.example.com"])
-
-    grant.replace(resources= ["https://api.example.org"])
-
-    print(set(grant.resources) == {"https://api.example.org"})
 
 mint_token
 ----------
@@ -185,7 +106,7 @@ recursive:
     A boolean. If true it means that all descendants of a token
     that matches the search criteria will be also marked as revoked.
 
-.. code-block::
+.. code-block:: Python
 
     from oidcendpoint.grant import Grant
     grant = Grant()
@@ -205,6 +126,43 @@ recursive:
     assert code.is_active() is False
     assert access_token_2.is_active() is False
 
+get_spec
+--------
+.. _get_spec:
+
+Claims, scope and resources can be specified for all tokens bound to a
+grant by setting those attributes off the grant instance. It is also possible
+to set specific values for specific tokens by setting those attributes in the
+token. This method will return the token specific values if they exist otherwise
+it will return the grant values for claims, scpoe and resources.
+
+.. code-block:: Python
+
+    from oidcendpoint.grant import Grant
+    grant = Grant(scope=["openid", "email", "address"],
+                  claims={"userinfo": {"given_name": None, "email": None}},
+                  resources=["https://api.example.com"]
+                  )
+    code = grant.mint_token("authorization_code", value="ABCD")
+    access_token = grant.mint_token("access_token", value="1234", based_on=code,
+                                    scope=["openid", "email", "eduperson"],
+                                    claims={
+                                        "userinfo": {
+                                            "given_name": None,
+                                            "eduperson_affiliation": None
+                                        }
+                                    })
+
+    spec = grant.get_spec(access_token)
+    assert set(spec.keys()) == {"scope", "claims", "resources"}
+    assert spec["scope"] == ["openid", "email", "eduperson"]
+    assert spec["claims"] == {
+        "userinfo": {
+            "given_name": None,
+            "eduperson_affiliation": None
+        }
+    }
+    assert spec["resources"] == ["https://api.example.com"]
 
 
 
