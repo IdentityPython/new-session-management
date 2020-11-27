@@ -4,9 +4,6 @@
 The information structure
 =========================
 
-As stated above there are 3 layers: user session information, client session
-information and grants. But first the keys to the information.
-
     - `Session key`_
     - `User session information`_
     - `Client session information`_
@@ -17,16 +14,16 @@ Session key
 +++++++++++
 .. _`Session key`:
 
-A key to the session information is based on a list. The first item being the
+The key to the session information is based on a list. The first item being the
 user identifier, the second the client identifier and the third the grant
 identifier.
 If you only want the user session information then the key is a list with one
-item the user id. If you want the client session information the key is a
+item, the user id. If you want the client session information the key is a
 list with 2 items (user_id, client_id). And lastly if you want a grant then
 the key is a list with 3 elements (user_id, client_id, grant_id).
 
 A *session identifier* is constructed using the **session_key** function.
-It takes as input the 3 elements list.::
+It takes as input 3 elements.::
 
     session_id = session_key(user_id, client_id, grant_id)
 
