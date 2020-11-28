@@ -10,4 +10,5 @@ Session Management
     grant_api
     token_api
     session_manager_api
+    claims_interface_api
 
