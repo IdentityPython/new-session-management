@@ -155,7 +155,6 @@ man_pages = [
      [author], 1)
 ]
 
-
 # -- Options for Texinfo output -------------------------------------------
 
 # Grouping the document tree into Texinfo files. List of tuples
@@ -166,8 +165,6 @@ texinfo_documents = [
      author, 'OidcEndpoint', 'One line description of project.',
      'Miscellaneous'),
 ]
-
-
 
 
 # Example configuration for intersphinx: refer to the Python standard library.
