@@ -5,7 +5,8 @@ About session management
 ========================
 
 The Session Management subsystem are designed to support a couple of
-different services that we have in the system as it is:
+different services that we have in, or are in the process of adding to, the
+system as it is:
 
 Single Logout
     Described in a set of specifications:
@@ -43,9 +44,6 @@ If for some reason the OP does not want to support SSO then the
 session management has to be done a bit differently. In that case each
 session (user_id,client_id) would have its own authentication even. Not one
 shared between the sessions.
-
-    - `Design criteria`_
-    - `Database layout`_
 
 Design criteria
 +++++++++++++++
