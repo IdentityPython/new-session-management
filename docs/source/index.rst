@@ -3,14 +3,19 @@
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-Welcome to documentation of the new Session Management!
-=======================================================
+Welcome to documentation of the new Session Management subsystem!
+=================================================================
 
 .. toctree::
    :maxdepth: 2
-   :caption: Contents:
 
-   session_manager
+   about
+   information_structure
+   session_info_api
+   grant_api
+   token_api
+   session_manager_api
+   claims_interface_api
 
 Indices and tables
 ==================
