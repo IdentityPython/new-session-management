@@ -7,7 +7,7 @@ Welcome to documentation of the new Session Management subsystem!
 =================================================================
 
 .. toctree::
-   :maxdepth: 2
+   :maxdepth: 1
 
    about
    information_structure
@@ -16,6 +16,7 @@ Welcome to documentation of the new Session Management subsystem!
    token_api
    session_manager_api
    claims_interface_api
+   usecase/sso_slo
 
 Indices and tables
 ==================
