@@ -17,6 +17,8 @@ Welcome to documentation of the new Session Management subsystem!
    session_manager_api
    claims_interface_api
    usecase/sso_slo
+   usecase/token_management
+   usecase/token_exchange
 
 Indices and tables
 ==================

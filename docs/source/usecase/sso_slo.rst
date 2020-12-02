@@ -219,7 +219,7 @@ and *_session_info_2* will have values like
 | client_session_info | :authorization_request:                             |
 |                     |    <oidcmsg.oidc.AuthorizationRequest object at     |
 |                     |    0x7f9420dbef28>                                  |
-|                     | :sub: '180d1537a71393f8471ca4d5303990b...'         |
+|                     | :sub: '180d1537a71393f8471ca4d5303990b...'          |
 |                     | :subordinate: ['453c26a232e111eba998acd...']        |
 |                     | :revoked: False                                     |
 |                     | :type: "ClientSessionInfo"                          |
