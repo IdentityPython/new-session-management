@@ -1,11 +1,13 @@
-====================
-Claims Interface API
-====================
+.. _session_claims:
+
+======
+Claims
+======
 
 The claims interface is there to gather the set of claims that can be
-returned for a specific use case. There are three use cases defined:
+returned for a specific use case. There are three interfaces defined:
 
-.. _usecases:
+.. _interfaces:
 
 userinfo
     This what is returned at the userinfo endpoint
@@ -14,15 +16,13 @@ id_token
     Claims that can be returned in an ID Token
 
 introspection
-    Combines 2 use cases. The first is when the access token is in fact a
-    JSON Web Token that can contains user claims. The second is what's returned
-    from the introspection endpoint.
+    What is returned from the introspection endpoint.
+
+token
+    An access token in the form of a
+    JSON Web Token that can contains user claims.
 
 These are the methods provided by the interface.
-
-    - authorization_request_claims_
-    - get_claims_
-    - get_user_claims_
 
 authorization_request_claims
 ----------------------------
@@ -41,7 +41,7 @@ client_id
     Client identifier
 
 usage
-    The use case. One of the usecases_ .
+    The use case. One of the interfaces_.
 
 
 get_claims
@@ -78,7 +78,7 @@ scopes
     Scopes from the authentication request
 
 usage
-    Where the claims are going to be used. One of the usecases_ .
+    Where the claims are going to be used. One of the interfaces_.
 
 Assume the following configuration of the userinfo endpoint::
 

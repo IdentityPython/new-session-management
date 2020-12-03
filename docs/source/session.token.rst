@@ -4,14 +4,37 @@
 Token API
 =========
 
-    - max_usage_reached_
-    - is_active_
-    - revoke_
-    - register_usage_
-    - has_been_used_
-    - to_json_
-    - from_json_
-    - supports_minting_
+As mention above there are presently only 3 token types that are defined:
+
+- authorization_code,
+- access_token and
+- refresh_token
+
+A token is described as follows::
+
+    {
+        "type": "authorization_code",
+        "issued_at": 1605452123,
+        "not_before": 0,
+        "expires_at": 1605452423,
+        "revoked": false,
+        "value": "Z0FBQUFBQmZzVUZieDFWZy1fbjE2ckxvZkFTVC1ZTHJIVlk0Z09tOVk1M0RsOVNDbkdfLTIxTUhILWs4T29kM1lmV015UEN1UGxrWkxLTkVXOEg1WVJLNjh3MGlhMVdSRWhYcUY4cGdBQkJEbzJUWUQ3UGxTUWlJVDNFUHFlb29PWUFKcjNXeHdRM1hDYzRIZnFrYjhVZnIyTFhvZ2Y0NUhjR1VBdzE0STVEWmJ3WkttTk1OYXQtTHNtdHJwYk1nWnl3MUJqSkdWZGFtdVNfY21VNXQxY3VzalpIczBWbGFueVk0TVZ2N2d2d0hVWTF4WG56TDJ6bz0=",
+        "usage_rules": {
+            "expires_in": 300,
+            "supports_minting": [
+                "access_token",
+                "refresh_token",
+                "id_token"
+            ],
+            "max_usage": 1
+            },
+        "used": 0,
+        "based_on": null,
+        "id": "96d19bea275211eba43bacde48001122"
+    }
+
+
+The mwthods are
 
 max_usage_reached
 -----------------

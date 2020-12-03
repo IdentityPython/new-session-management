@@ -71,8 +71,32 @@ Below that the Relying Parties and at the bottom what is called grants.
 Grants organize authorization codes, access tokens and refresh tokens (and
 possibly other types of tokens) in a comprehensive way. More about that below.
 
-There may be many Relying Parties below a user and many grants below a
+There may be many Relying Parties below an user and many grants below a
 Relying Party.
+
+Session key
++++++++++++
+.. _`Session key`:
+
+The key to the session information is based on a list. The first item being the
+user identifier, the second the client identifier and the third the grant
+identifier.
+If you only want the user session information then the key is a list with one
+item, the user id. If you want the client session information the key is a
+list with 2 items (user_id, client_id). And lastly if you want a grant then
+the key is a list with 3 elements (user_id, client_id, grant_id).
+
+A *session identifier* is constructed using the **session_key** function.
+It takes as input 3 elements.::
+
+    session_id = session_key(user_id, client_id, grant_id)
+
+
+Using the function **unpack_session_key** you can get the elements from a
+session_id.::
+
+    user_id, client_id, grant_id = unpack_session_id(session_id)
+
 
 .. _`Session Management`: https://openid.net/specs/openid-connect-session-1_0.html
 .. _`Back-Channel Logout`: https://openid.net/specs/openid-connect-backchannel-1_0.html

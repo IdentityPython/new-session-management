@@ -10,15 +10,14 @@ Welcome to documentation of the new Session Management subsystem!
    :maxdepth: 1
 
    about
-   information_structure
-   session_info_api
-   grant_api
-   token_api
-   session_manager_api
-   claims_interface_api
-   usecase/sso_slo
-   usecase/token_management
-   usecase/token_exchange
+   session.claims
+   session.database
+   session.storage
+   session.info
+   session.grant
+   session.token
+   session.manager
+   usecase/index
 
 Indices and tables
 ==================
