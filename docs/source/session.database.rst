@@ -6,14 +6,23 @@ The model of the underlying session database. You can either
 use it as it is or you can write your own implementing the same
 interface.
 
-The class has the following methods:
+Database
+--------
 
-get
----
+.. code-block:: python
+
+    def __init__(storage=None):
+
+*storage* is the backend storage system. The storage system must support
+a dictionary like interface with as a minimum the methods:
+*__setitem__*, *__getitem__* and *get*. If no storage is provided the default
+is to use an in memory dictionary.
+
+------
 
 .. code-block:: Python
 
-    get(path: List[str]) -> Union[SessionInfo, Grant]
+    def get(path: List[str]) -> Union[SessionInfo, Grant]
 
 The path can be of different length (1-3) with the following
 content
@@ -27,24 +36,20 @@ Thus if the path is of length one the response will contain
 will be :ref:`Client session information<info.client>` and if it is of length
 three the response will be :ref:`Grant information`.
 
-set
----
-
-.. code-block:: python
-
-    set(path: List[str], value: Union[SessionInfo, Grant])
-
-Adds information to the database.
-
-The same rules applies to path as for get.
-
-delete
 ------
 
 .. code-block:: python
 
-    delete(path: List[str])
+    def set(path: List[str], value: Union[SessionInfo, Grant])
 
-Removes information from the database
+Adds information to the database.
+The same rules applies to path as for get.
 
+------
+
+.. code-block:: python
+
+    def delete(path: List[str])
+
+Removes information from the database.
 The same rules applies to path as for get.

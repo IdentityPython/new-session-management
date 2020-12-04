@@ -4,46 +4,55 @@
 Session Information
 ===================
 
+SessionInfo
+-----------
+
 The SessionInfo class is the base class for ClientSessionInfo and
-UserSessionInfo. The SessionInfo class itself is based on the
+UserSessionInfo. The SessionInfo class itself is based on
 oidcmsg.message.Message. Beside the Message methods it also has the methods
-listed below:
+listed below.
 
-    - `add_subordinate`_
-    - `remove_subordinate`_
-    - `revoke`_
-    - `is_revoked`_
+.. code-block:: python
 
-add_subordinate
-+++++++++++++++
-.. _`info.add_subordinate`:
+    def add_subordinate(value: str) -> "SessionInfo":
 
 Adds a subordinate. If the class represents user information the
-subordinates are ClientSessionInfo instances. If the class represents client
-session information the subordinates are Grant instances.
+subordinates are ClientSessionInfo_ instances. If the class represents client
+session information the subordinates are :ref:`Grant` instances.
 
-remove_subordinate
-++++++++++++++++++
+-----
+
 .. _`info.removed_subordinate`:
+.. code-block:: python
+
+    def remove_subordinate(value: str) -> 'SessionInfo'
 
 Removes a subordinate or rather it removes the reference to a subordinate.
 The instance the reference points to will still exist in the database.
 
-revoke
-++++++
+----
+
 .. _`info.revoke`:
+.. code-block:: python
+
+    def revoke(self) -> 'SessionInfo'
 
 This marks the SessionInfo as being revoked.
 
-is_revoked
-++++++++++
+----
+
 .. _`info.is_revoked`:
+.. code-block:: python
+
+    def is_revoked() -> bool
 
 This method return True if the SessionInfo is revoked otherwise False.
 
 User session information
-++++++++++++++++++++++++
-.. _`info.user`:
+------------------------
+.. _`UserSessionInfo`:
+
+Subclass of SessionInfo_ .
 
 Houses the authentication event information which is the same for all session
 connected to a user.
@@ -62,8 +71,10 @@ Expressed as a dictionary this can look like this::
 
 
 Client session information
-++++++++++++++++++++++++++
-.. _`info.client`:
+--------------------------
+.. _`ClientSessionInfo`:
+
+Subclass of SessionInfo_ .
 
 The client specific information of the session information.
 Presently only the authorization request and the subject identifier (sub).

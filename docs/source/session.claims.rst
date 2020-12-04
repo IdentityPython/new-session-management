@@ -24,29 +24,43 @@ token
 
 These are the methods provided by the interface.
 
-authorization_request_claims
-----------------------------
-.. _authorization_request_claims:
+ClaimsInterface
+---------------
+
+.. code-block:: python
+
+    def __init__(endpoint_context):
+
+*endpoint_context* is a pointer to the system wide endpoint context.
+
+.. code-block:: python
+
+    def authorization_request_claims(
+        user_id: str,
+        client_id: str,
+        usage: Optional[str] = ""
+        ) -> dict:
+
 
 According to section 5.5 of `OIDC Core`_ a client can ask for a specific
 set of claims by using the claims parameter in the authentication request.
 This method picks the claim set from the request.
+*user_id* is a user identifier. *client_id* is a client identifier and
+*usage* specifies the interface at which the claims should be used.
+When it comes to a authentication request the two allowed interfaces are
+userinfo and id_token.
 
-Methods arguments:
+------
 
-user_id
-    User identifier
-
-client_id
-    Client identifier
-
-usage
-    The use case. One of the interfaces_.
-
-
-get_claims
-----------
 .. _get_claims:
+.. code-block:: python
+
+    def get_claims(
+        client_id: str,
+        user_id: str,
+        scopes: str,
+        usage: str
+        ) -> dict:
 
 Gathers information about which claims to return from a number of places.
 This is based on endpoint configuration. The configuration parameters used are:
@@ -66,21 +80,18 @@ add_claims_by_scope
     This parameter governs whether scopes provided in the authentication
     request should be translated into claims or not
 
-The parameters to the method is:
+The method process is that it first fetches *base_claims* for the interface in
+question then get claims in the client configuration and finally maps scopes
+into claims. The result of this process is the union of the three different
+sets. Once this set is known it will be mapped against the set that specified
+in the claims parameter of the authentication request. The result of this
+mapping is the intersection of these two sets.
+*user_id* is a user identifier. *client_id* is a client identifier (client_id).
+*scopes* Scopes from the authentication request possibly augmented by the
+authorization subsystem. *usage* is which interface the claims are going to
+be used at. One of the interfaces_.
 
-user_id
-    User identifier
-
-client_id
-    Client identifier (client_id)
-
-scopes
-    Scopes from the authentication request
-
-usage
-    Where the claims are going to be used. One of the interfaces_.
-
-Assume the following configuration of the userinfo endpoint::
+As an example sssume the following configuration of the userinfo endpoint::
 
     "userinfo": {
         "path": "userinfo",
@@ -101,7 +112,7 @@ Assume the following configuration of the userinfo endpoint::
         },
     },
 
-and the following authentication request::
+the following authentication request::
 
     AUTHN_REQ = AuthorizationRequest(
         response_type="code",
@@ -118,6 +129,8 @@ and the following authentication request::
             }
         }
     )
+
+and the following code flow.
 
 .. code-block:: Python
 
@@ -146,7 +159,7 @@ and the following authentication request::
     }
 
 What get_claims does is first fetch the base claims from the endpoint
-configuration. In this case that is::
+configuration. In this case that is (from the configuration)::
 
     "base_claims": {
         "eduperson_scoped_affiliation": None,
@@ -154,7 +167,8 @@ configuration. In this case that is::
     },
 
 Since *add_claims_by_scope* is defined as True get_claims will then
-convert the scopes into sets of claims. In this case it adds *sub*.
+convert the scopes into sets of claims. In this case it adds *sub* based on the
+scope *openid*.
 Finally since *enable_claims_per_client* is set to True it will look in the
 client configuration and find nothing. So the end result of the claims
 gathering are the base claims plus *sub*. That is then matched against the
@@ -170,11 +184,29 @@ Section 5.3.2 of `OIDC Core`_ ::
 Where you would use the result you get from *get_user_claims* is in the
 consent interaction with the user.
 
-get_user_claims
----------------
+------
+
+.. code-block:: python
+
+    def get_user_claims(user_id: str, claims_restriction: dict) -> dict:
+
 .. _get_user_claims:
 
 Use a set of permitted claims as a filter to figure out which claims
-of the complete set of user claims to return.
+of the complete set of user's claims to return.
+
+------
+
+.. code-block:: python
+
+    def get_claims_all_usage(
+        client_id: str,
+        user_id: str,
+        scopes: str
+        ) -> dict:
+
+A complement to get_claims_ . It uses get_claims in the background but
+does it for all use cases. Such that it returns the allow claims as values
+in a dictionary where the keys are the interfaces_ .
 
 .. _`OIDC Core`: http://openid.net/specs/openid-connect-core-1_0.html

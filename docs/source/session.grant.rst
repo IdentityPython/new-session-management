@@ -1,129 +1,148 @@
-=====
-Grant
-=====
 
-Grants are created by an authorization subsystem in an OP. If the grant is
+======
+Grants
+======
+
+Grants are created by an authorization subsystem. If the grant is
 created in connection with an user authentication the authorization system
 might normally ask the user for usage consent and then base the construction
 of the grant on that consent.
 
 If an authorization server can act as a Security Token Service (STS) as
 defined by https://tools.ietf.org/html/draft-ietf-oauth-token-exchange-16
-then no user is involved. In the context of session management the STS is
-equivalent to a user.
+the user might set up one or more exchange. More about that when we get
+to ExchangeGrant_ .
 
-Grant information
-+++++++++++++++++
-.. _`Grant information`:
+.. _Grant:
+.. code-block:: python
 
-Grant information contains information about user consent and issued tokens.::
+    parameters = ["scope", "claim", "resources", "authorization_details",
+                  "issued_token", "usage_rules", "revoked", "issued_at",
+                  "expires_at"]
+    type = "grant"
 
-    {
-        "type": "grant",
-        "scope": ["openid", "research_and_scholarship"],
-        "authorization_details": null,
-        "claims": {
-            "userinfo": {
-                "sub": null,
-                "name": null,
-                "given_name": null,
-                "family_name": null,
-                "email": null,
-                "email_verified": null,
-                "eduperson_scoped_affiliation": null
-            }
-        },
-        "resources": ["client_1"],
-        "issued_at": 1605452123,
-        "not_before": 0,
-        "expires_at": 0,
-        "revoked": false,
-        "issued_token": [
-            {
-                "type": "authorization_code",
-                "issued_at": 1605452123,
-                "not_before": 0,
-                "expires_at": 1605452423,
-                "revoked": false,
-                "value": "Z0FBQUFBQmZzVUZieDFWZy1fbjE2ckxvZkFTVC1ZTHJIVlk0Z09tOVk1M0RsOVNDbkdfLTIxTUhILWs4T29kM1lmV015UEN1UGxrWkxLTkVXOEg1WVJLNjh3MGlhMVdSRWhYcUY4cGdBQkJEbzJUWUQ3UGxTUWlJVDNFUHFlb29PWUFKcjNXeHdRM1hDYzRIZnFrYjhVZnIyTFhvZ2Y0NUhjR1VBdzE0STVEWmJ3WkttTk1OYXQtTHNtdHJwYk1nWnl3MUJqSkdWZGFtdVNfY21VNXQxY3VzalpIczBWbGFueVk0TVZ2N2d2d0hVWTF4WG56TDJ6bz0=",
-                "usage_rules": {
-                    "expires_in": 300,
-                    "supports_minting": [
-                        "access_token",
-                        "refresh_token",
-                        "id_token"
-                    ],
-                    "max_usage": 1
-                    },
-                "used": 0,
-                "based_on": null,
-                "id": "96d19bea275211eba43bacde48001122"
-           },
-           {
-                "type": "access_token",
-                "issued_at": 1605452123,
-                "not_before": 0,
-                "expires_at": 1605452723,
-                "revoked": false,
-                "value": "Z0FBQUFBQmZzVUZiaWVRbi1IS2k0VW4wVDY1ZmJHeEVCR1hVODBaQXR6MWkzelNBRFpOS2tRM3p4WWY5Y1J6dk5IWWpnelRETGVpSG52b0d4RGhjOWphdWp4eW5xZEJwQzliaS16cXFCcmRFbVJqUldsR1Z3SHdTVVlWbkpHak54TmJaSTV2T3NEQ0Y1WFkxQkFyamZHbmd4V0RHQ3k1MVczYlYwakEyM010SGoyZk9tUVVxbWdYUzBvMmRRNVlZMUhRSnM4WFd2QzRkVmtWNVJ1aVdJSXQyWnpVTlRiZnMtcVhKTklGdzBzdDJ3RkRnc1A1UEw2Yz0=",
-                "usage_rules": {
-                    "expires_in": 600,
-                },
-                "used": 0,
-                "based_on": "Z0FBQUFBQmZzVUZieDFWZy1fbjE2ckxvZkFTVC1ZTHJIVlk0Z09tOVk1M0RsOVNDbkdfLTIxTUhILWs4T29kM1lmV015UEN1UGxrWkxLTkVXOEg1WVJLNjh3MGlhMVdSRWhYcUY4cGdBQkJEbzJUWUQ3UGxTUWlJVDNFUHFlb29PWUFKcjNXeHdRM1hDYzRIZnFrYjhVZnIyTFhvZ2Y0NUhjR1VBdzE0STVEWmJ3WkttTk1OYXQtTHNtdHJwYk1nWnl3MUJqSkdWZGFtdVNfY21VNXQxY3VzalpIczBWbGFueVk0TVZ2N2d2d0hVWTF4WG56TDJ6bz0=",
-                "id": "96d1c840275211eba43bacde48001122"
-           }
-        ],
-        "id": "96d16d3c275211eba43bacde48001122"
-    }
+    def __init__(self,
+                 scope: Optional[list] = None,
+                 claims: Optional[dict] = None,
+                 resources: Optional[list] = None,
+                 authorization_details: Optional[dict] = None,
+                 issued_token: Optional[list] = None,
+                 usage_rules: Optional[dict] = None,
+                 issued_at: int = 0,
+                 expires_in: int = 0,
+                 expires_at: int = 0,
+                 revoked: bool = False,
+                 token_map: Optional[dict] = None):
 
-The base class is Grant with the methods:
+Grant is a subclass of :ref:`Item`
 
-is_active
----------
-.. _grant_is_active:
+*scope*, *claims* and *resources* specifies restrictions that are to be applied
+to tokens minted by this grant. *authorization_details* is a placeholder for
+the time being. *issued_token* is a list of tokens minted by this grant.
+*usage_rules* are templates to apply to the tokens minted by this grant.
+*token_map* is a map between token types and classes to be used when
+initiating such tokens.
 
-There might be several reasons why a grant can not be used to mint new tokens.
-It may have expires, been revoked or have reached its max usage limit. This
-method will tell you if any of those limits has been reached.
+-----
 
-max_usage_reached
------------------
-.. _grant_max_usage_reached:
+.. code-block:: python
 
-If there is an upper limit as to how many times a grant can be used to mint
-new tokens this method will tell you if that limit has been reached.
+    def max_usage_reached()
 
-revoke
+Returns **True** if the item has been used the maximum number of times
+it is allowed to be used.
+
 ------
-.. _grant_revoke:
 
-Will revoke a grant. Does not necessarily mean that all the tokens that has
-been minted by this grant also will be revoked.
+.. code-block:: python
 
-mint_token
-----------
-.. _grant_mint_token:
+    def is_active(now=0)
+
+Returns **True** if the item can still be used.
+This means that:
+
+    - The time before which the item can not be used has passed,
+    - The expiration time has not been reached,
+    - The item has not been revoked and
+    - The usage has not passed the max usage limit.
+
+------
+
+.. code-block:: python
+
+    def revoke()
+
+Sets the revoke attribute to **True**.
+Code example:
+
+.. code-block:: Python
+
+    from oidcendpoint.session.token import Item
+    token = Item()
+    token.revoke()
+    assert token.is_active() is False
+
+
+
+------
+
+.. code-block:: python
+
+    def to_json():
+
+Converts the information in the instance into a string representation of a
+JSON object. This string is what is expected to be stored in the database.
+
+------
+
+.. code-block:: python
+
+    def from_json(json_str)
+
+Sets attributes in the instance to values that are stored as a the
+string representation of a JSON object. This method is used to fill a
+instance with information stored about it in the database.
+Code example:
+
+.. code-block:: python
+
+    from oidcendpoint.session.grant import Grant
+    grant = Grant(scope=["openid", "foo", "bar"],
+                  claims={"userinfo": {"given_name": None}},
+                  resources=["https://api.example.com"])
+
+    _json_str = grant.to_json()
+
+    _new_code = Grant().from_json(_json_str)
+
+    for attr in Grant.parameters:
+        assert getattr(code, attr) == getattr(_new_code, attr)
+
+
+------
+
+.. code-block:: python
+
+    def mint_token(
+            token_type: str,
+            value: str,
+            based_on: Optional[Token] = None,
+            usage_rules: Optional[dict] = None,
+            **kwargs
+            ) -> Optional[Token]:
 
 Can be used to create new tokens. Based on another token or just on the
-grant itself. Method parameters are:
-
-token_type
-    The type of token. By default the set::
+grant itself.
+*token_type* is the type of token. By default the set::
 
         - authorization_code,
         - access_token and
         - refresh_token
 
-    is recognized.
-value
-    The value of the token. This what is sent around in OIDC protocol
-    exchanges.
-based_on
-    A token the new token is a child of.
-kwargs
-    Extra keyword arguments that are used as parameter used in the
-    token initialisation.
+is recognized. *value* is the value of the token. This is what is sent around
+in OIDC protocol exchanges. *based_on*, a token the new token is a child of.
+*kwargs* are extra keyword arguments that are used as parameter for the
+token initialisation.
 
 Code example:
 
@@ -140,43 +159,43 @@ Code example:
     assert access_token.scope == ["openid", "foo", "bar"]
 
 
-get_token
----------
-.. _grant_get_token:
+------
+
+.. code-block:: python
+
+    def get_token(value: str) -> Optional[Token]
 
 Among all the tokens that has been minted using this specific grant, find
-the one that matches the value given.
-Takes only one argument: the value.
+the one that matches the *value* given. Usage example:
 
 .. code-block:: Python
 
-    from oidcendpoint.grant import Grant
+    from oidcendpoint.session.grant import Grant
     grant = Grant()
     code = grant.mint_token("authorization_code", value="ABCD")
 
-    _code = grant.get_token(code.value)
-    assert _code.id == code.id
+    code_copy = grant.get_token(code.value)
+    assert code_copy.id == code.id
 
-revoke_token
-------------
+------
+
 .. _grant_revoke_token:
 
-Mark the token as revoked.
-Takes three arguments:
+.. code-block:: python
 
-value
-    The token value
+    def revoke_token(
+             value: Optional[str] = "",
+             based_on: Optional[str] = "",
+             recursive: bool = True):
 
-based_on:
-    A token index
-
-recursive:
-    A boolean. If true it means that all descendants of a token
-    that matches the search criteria will be also marked as revoked.
+Mark the token as revoked. *value* is the token value. *based_on* a reference
+to the item this token is based on. *recursive* states whether all
+descendants of a token that matches the search criteria will be also
+marked as revoked.
 
 .. code-block:: Python
 
-    from oidcendpoint.grant import Grant
+    from oidcendpoint.session.grant import Grant
     grant = Grant()
     code = grant.mint_token("authorization_code", value="ABCD")
     access_token = grant.mint_token("access_token", value="1234", based_on=code)
@@ -194,15 +213,18 @@ recursive:
     assert code.is_active() is False
     assert access_token_2.is_active() is False
 
-get_spec
---------
+------
+
 .. _grant_get_spec:
+.. code-block:: python
+
+    def get_spec(token: Token) -> Optional[dict]:
 
 Claims, scope and resources can be specified for all tokens bound to a
 grant by setting those attributes off the grant instance. It is also possible
 to set specific values for specific tokens by setting those attributes in the
 token. This method will return the token specific values if they exist otherwise
-it will return the grant values for claims, scpoe and resources.
+it will return the grant values for claims, scope and resources.
 
 .. code-block:: Python
 
@@ -234,3 +256,8 @@ it will return the grant values for claims, scpoe and resources.
 
 
 
+Exchange Grant
+--------------
+.. _ExchangeGrant:
+
+Subclass of Grant_ .

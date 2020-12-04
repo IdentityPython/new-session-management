@@ -1,11 +1,8 @@
-.. _ClaimsInterface:
+.. _ClaimsInterfaceUsage:
 
-===============
-ClaimsInterface
-===============
-
-One useful API in this instance is the ClaimsInterface. So let us
-look at what it can do.
+=====================
+ClaimsInterface Usage
+=====================
 
 There are 4 cases where user information can be exported from an OP:
 
