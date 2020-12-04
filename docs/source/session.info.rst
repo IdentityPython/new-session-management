@@ -41,12 +41,13 @@ This marks the SessionInfo as being revoked.
 
 ----
 
-.. _`info.is_revoked`:
 .. code-block:: python
 
     def is_revoked() -> bool
 
 This method return True if the SessionInfo is revoked otherwise False.
+
+-----
 
 User session information
 ------------------------
@@ -69,6 +70,7 @@ Expressed as a dictionary this can look like this::
         'subordinate': ['client_1']
     }
 
+------
 
 Client session information
 --------------------------

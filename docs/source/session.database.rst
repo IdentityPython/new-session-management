@@ -32,9 +32,9 @@ content
     - user_id, client_id and grant_id
 
 Thus if the path is of length one the response will contain
-:ref:`User session info<info.user>` . If it has the length two the response
-will be :ref:`Client session information<info.client>` and if it is of length
-three the response will be :ref:`Grant information`.
+:ref:`User session info<UserSessionInfo>` . If it has the length two the response
+will be :ref:`Client session information<ClientSessionInfo>` and if it is of length
+three the response will be :ref:`Grant`.
 
 ------
 

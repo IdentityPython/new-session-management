@@ -6,45 +6,51 @@ Session Manager Package
 
 The Session Manager Package is a library for managing sessions.
 
-create_session
+SessionManager
 --------------
-.. _mngr_create_session:
+
+.. code-block:: python
+
+    def __init__(
+        handler: TokenHandler,
+        db: Optional[object] = None,
+        conf: Optional[dict] = None,
+        sub_func: Optional[dict] = None):
+
+*handler* is a TokenHandler instance. *db* may be a persistent storage module.
+*conf* is session manager configuration and *sub_fuc* is a dictionary of
+subject identifier functions as values and subject identifier types (public,
+pairwise or ephemeral).
+
+----
 
 .. code-block:: Python
 
-    create_session(authn_event: AuthnEvent,
-                   auth_req: AuthorizationRequest,
-                   user_id: str,
-                   client_id: str = "",
-                   sub_type: str = "public",
-                   sector_identifier: str = ''):
+    def create_session(
+        authn_event: AuthnEvent,
+        auth_req: AuthorizationRequest,
+        user_id: str,
+        client_id: str = "",
+        sub_type: str = "public",
+        sector_identifier: str = ''):
 
-Creates a new session. The create_session methods takes the following
-arguments.
+Creates a new session. *authn_event* an AuthnEvent class instance that
+describes the authentication event. *auth_req* an Authentication request.
+*client_id* a client Identifier. *user_id* an user identifier.
+*sub_type* provides the type of subject identifier that should be constructed.
+It can either be *pairwise*, *public* or *ephemeral*. *sector_identifier*
+is a sector identifier to be used when constructing a pairwise subject
+identifier. If sub_type is *pairwise* then sector_identifier MUST be present.
 
-authn_event
-    An AuthnEvent class instance that describes the authentication event.
+Creating a new session means creating a
+:ref:`User Session Info<UserSessionInfo>` instance and a
+:ref:`Client Session Info<ClientSessionInfo>` instance and store the first
+under the key *user_id* in the database and the other under the key
+[*user_id*,*client_id*].
 
-auth_req
-    The Authentication request
+So a typical command would look like this:
 
-client_id
-    The client Identifier
-
-user_id
-    The user identifier
-
-sector_identifier
-    A possible sector identifier to be used when constructing a pairwise
-    subject identifier. If sub_type is *pairwise* then sector_identifier MUST
-    be present.
-
-sub_type
-    The type of subject identifier that should be constructed. It can either be
-    *pairwise*, *public* or *ephemeral*.
-
-So a typical command would look like this::
-
+.. code-block:: python
 
     from oidcmsg.oidc import AuthorizationRequest
     from oidcendpoint.authn_event import create_authn_event
@@ -66,28 +72,22 @@ So a typical command would look like this::
                                    sub_type="pairwise",
                                    sector_identifier="https://example.com/sid")
 
+    user_session_info = session_manager.get(["diana"])
+    client_session_info = session_manager.get(["diana", "client_1"])
+
 The authorization request is of course something you receive from a client.
 And the authn_event does normally contain more information then this.
 
-add_grant
----------
-.. _mngr_add_grant:
+-----
 
-.. code-block:: Python
+.. code-block:: python
 
-    add_grant(user_id: str, client_id: str, **kwargs) -> Grant
+    def add_grant(user_id: str, client_id: str, **kwargs) -> Grant
+
 
 Creates and adds a grant to a user's session.
-Method parameters:
-
-user_id
-    User identifier
-
-client_id
-    Client identifier
-
-kwargs
-    Keyword arguments to the Grant class initialization
+*user_id* and *client_id* are the normal user and client identifiers.
+*kwargs* are keyword arguments to the Grant class initialization.
 
 .. code-block:: Python
 
@@ -102,22 +102,16 @@ kwargs
         scope=["openid", "phoe"],
         claims={"userinfo": {"given_name": None}})
 
-find_token
-----------
-.. _mngr_find_token:
+-----
 
 .. code-block:: Python
 
     find_token(session_id: str, token_value: str) -> Optional[Token]
 
 Finds a specific token belonging to a session.
-Method parameters:
-
-session_id
-    Session identifier
-
-token_value
-    The value of an access/refresh token, code or some other kind of token.
+*session_id* a session identifier.
+*token_value* is the value of an access/refresh token, code or some other
+kind of token.
 
 Code example:
 
@@ -139,44 +133,27 @@ Code example:
     assert _token.type == "authorization_code"
     assert _token.id == code.id
 
-
-
-get_authentication_event
-------------------------
-.. _mngr_get_authentication_event:
+------
 
 .. code-block:: Python
 
     get_authentication_event(self, session_id: str) -> AuthnEvent
 
 Finds the authentication event bound to a session.
-Method parameters:
+*session_id* is a session identifier.
 
-session_id
-    Session identifier
-
-get_client_session_info
------------------------
-.. _mngr_get_client_session_info:
+------
 
 .. code-block:: Python
 
     get_client_session_info(session_id: str) -> ClientSessionInfo
 
 Returns the client session info of a session.
+*session_id* is a session identifier.
 
-Method parameters:
+.. code-block:: python
 
-session_id
-    Session identifier
-
-get_session_info
-----------------
-.. _mngr_get_session_info:
-
-.. code-block::
-
-    get_session_info(session_id: str) -> dict
+    def get_session_info(session_id: str) -> dict
 
 Return a dictionary with the following keys:
     - session_id,
@@ -187,6 +164,7 @@ Return a dictionary with the following keys:
     - grant
 
 All information belonging to one session.
+*session_id* is a session identifier.
 
 Code example:
 
@@ -205,16 +183,15 @@ Code example:
 
     assert session_info["user_id"] == "diana"
 
-get_session_info_by_token
--------------------------
-.. _mngr_get_session_info_by_token:
 
-Basically the same as get_session_info but here we start with
-a token value rather then with a session_id.
+-------------------------
 
 .. code-block:: Python
 
     get_session_info_by_token(token_value: str) -> dict
+
+Basically the same as get_session_info but here we start with
+a token value rather then with a session_id.
 
 Code example:
 
@@ -238,28 +215,42 @@ Code example:
     assert session_info["user_id"] == "diana"
 
 
-revoke_client_session
----------------------
-.. _mngr_revoke_client_session:
+--------
 
-revoke_client_session(self, session_id)
+.. code-block:: python
 
-revoke_grant
+    def revoke_client_session(session_id)
+
+*session_id* is a session identifier.
+
 ------------
-.. _mngr_revoke_grant:
 
-revoke_grant(self, session_id)
+.. code-block:: python
 
-revoke_token
+    def revoke_grant(session_id)
+
+*session_id* is a session identifier.
+
 ------------
-.. _mngr_revoke_token:
 
-revoke_token(self, session_id, token_value, recursive=False)
+.. code-block:: python
 
-grants
+    def revoke_token(session_id, token_value, recursive=False)
+
 ------
-.. _mngr_grants:
 
-find_exchange_grant
--------------------
-.. _mngr_find_exchange_grant:
+.. code-block:: python
+
+    def grants(session_id: str) -> List[Grant]:
+
+*session_id* is a session identifier.
+
+------
+
+.. code-block:: python
+
+    def find_exchange_grant(
+        token: str,
+        resource_server: str
+        ) -> Optional[Grant]:
+

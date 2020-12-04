@@ -2,7 +2,9 @@
 Single Sign On/Single log out use case
 ======================================
 
-We start with a configuration like this::
+We start with a configuration like this:
+
+.. code-block:: python
 
     CONF = {
         "issuer": "https://example.com/",
@@ -67,12 +69,16 @@ We start with a configuration like this::
     }
 
 
-Given this configuration we can instantiate an endpoint context::
+Given this configuration we can instantiate an endpoint context:
+
+.. code-block:: python
 
     from oidcendpoint.endpoint_context import EndpointContext
     endpoint_context = EndpointContext(CONF)
 
-Add some client configuration::
+Add some client configuration:
+
+.. code-block:: python
 
     endpoint_context.cdb = {
         "client_1": {
@@ -97,7 +103,9 @@ Add some client configuration::
         },
     }
 
-and pick out some links for later usage::
+and pick out some links for later usage.
+
+.. code-block:: python
 
     session_manager = endpoint_context.session_manager
     authn_endpoint = endpoint_context.endpoint["authorization"]

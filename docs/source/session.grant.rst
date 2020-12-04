@@ -1,4 +1,3 @@
-
 ======
 Grants
 ======
@@ -13,7 +12,9 @@ defined by https://tools.ietf.org/html/draft-ietf-oauth-token-exchange-16
 the user might set up one or more exchange. More about that when we get
 to ExchangeGrant_ .
 
-.. _Grant:
+Grant
+-----
+.. _`Grant`:
 .. code-block:: python
 
     parameters = ["scope", "claim", "resources", "authorization_details",

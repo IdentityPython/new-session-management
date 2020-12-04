@@ -85,7 +85,7 @@ This is then expressed in the following endpoint_context configuration:
             },
             "code": {"lifetime": 600},
             "token": {
-                "class": "oidcendpoint.jwt_token.JWTToken",
+                "class": "oidcendpoint.token.jwt_token.JWTToken",
                 "kwargs": {
                     "lifetime": 3600,
                     "base_claims": {"eduperson_scoped_affiliation": None},
@@ -93,7 +93,7 @@ This is then expressed in the following endpoint_context configuration:
                 },
             },
             "refresh": {
-                "class": "oidcendpoint.jwt_token.JWTToken",
+                "class": "oidcendpoint.token.jwt_token.JWTToken",
                 "kwargs": {
                     "lifetime": 3600,
                     "aud": ["https://example.org/appl"],
@@ -223,7 +223,7 @@ different clients:
     _pr_resp = authn_endpoint.parse_request(AUTHN_REQ_2.to_dict())
     _resp = authn_endpoint.process_request(_pr_resp)
 
-Now for the fun part. The method we want to use if **get_claims**.
+Now for the fun part. The method we want to use is **get_claims**.
 It takes 4 arguments:
 
 - client_id,
@@ -278,7 +278,7 @@ method **get_user_claims**.
                                                         AUTHN_REQ_1["scope"],
                                                         "userinfo")
 
-    res = self.claims_interface.get_user_claims("diana", _userinfo_restriction)
+    res = claims_interface.get_user_claims("diana", _userinfo_restriction)
 
 This would give you the exact user info to return over the interface in question.
 
@@ -290,7 +290,7 @@ Now to find out what to display to the user's consent page you would run:
                                                     "diana",
                                                     AUTHN_REQ_1["scope"])
 
-    ava = self.claims_interface.get_user_claims("diana", _claims)
+    ava = claims_interface.get_user_claims("diana", _claims)
 
 
 ava would then contain all the claims the OP can imaging returning to a
