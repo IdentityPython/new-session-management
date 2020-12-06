@@ -1,10 +1,8 @@
-.. _`Session Manager`:
+===============
+Session Manager
+===============
 
-=======================
-Session Manager Package
-=======================
-
-The Session Manager Package is a library for managing sessions.
+The Session Manager are there to managing sessions.
 
 SessionManager
 --------------
@@ -75,7 +73,7 @@ So a typical command would look like this:
     user_session_info = session_manager.get(["diana"])
     client_session_info = session_manager.get(["diana", "client_1"])
 
-The authorization request is of course something you receive from a client.
+**Note**: The authorization request is of course something you receive from a client.
 And the authn_event does normally contain more information then this.
 
 -----
@@ -106,10 +104,10 @@ Creates and adds a grant to a user's session.
 
 .. code-block:: Python
 
-    find_token(session_id: str, token_value: str) -> Optional[Token]
+    def find_token(session_id: str, token_value: str) -> Optional[Token]
 
 Finds a specific token belonging to a session.
-*session_id* a session identifier.
+*session_id* is a session identifier.
 *token_value* is the value of an access/refresh token, code or some other
 kind of token.
 
@@ -137,7 +135,7 @@ Code example:
 
 .. code-block:: Python
 
-    get_authentication_event(self, session_id: str) -> AuthnEvent
+    def get_authentication_event(self, session_id: str) -> AuthnEvent
 
 Finds the authentication event bound to a session.
 *session_id* is a session identifier.
@@ -146,10 +144,12 @@ Finds the authentication event bound to a session.
 
 .. code-block:: Python
 
-    get_client_session_info(session_id: str) -> ClientSessionInfo
+    def get_client_session_info(session_id: str) -> ClientSessionInfo
 
 Returns the client session info of a session.
 *session_id* is a session identifier.
+
+------
 
 .. code-block:: python
 
@@ -188,7 +188,7 @@ Code example:
 
 .. code-block:: Python
 
-    get_session_info_by_token(token_value: str) -> dict
+    def get_session_info_by_token(token_value: str) -> dict
 
 Basically the same as get_session_info but here we start with
 a token value rather then with a session_id.
@@ -221,6 +221,9 @@ Code example:
 
     def revoke_client_session(session_id)
 
+Revokes a client session. That is it sets the revoked attribute of
+the client session info. It does not remove the client session info from the
+database.
 *session_id* is a session identifier.
 
 ------------
@@ -229,6 +232,9 @@ Code example:
 
     def revoke_grant(session_id)
 
+Revokes a grant. That is it sets the revoked attribute of
+the grant. It does not remove the grant from the
+database. Nor does it revoke any of the tokens minted by the grant.
 *session_id* is a session identifier.
 
 ------------
@@ -237,12 +243,20 @@ Code example:
 
     def revoke_token(session_id, token_value, recursive=False)
 
+Revokes a token. That is it sets the revoked attribute of
+the token. It does not remove the token from the
+database. Nor does it revoke any of the tokens minted based on the token.
+*session_id* is a session identifier.
+
 ------
 
 .. code-block:: python
 
     def grants(session_id: str) -> List[Grant]:
 
+Find and return all the grants that belongs to this session. This would
+normally be one :ref:`Grant` instance and one or more :ref:`ExchangeGrant`
+instances.
 *session_id* is a session identifier.
 
 ------
@@ -254,3 +268,5 @@ Code example:
         resource_server: str
         ) -> Optional[Grant]:
 
+Find a specific :ref:`ExchangeGrant` instances using a token value and the
+name of a resource service the exchange grant is usable at.

@@ -17,7 +17,7 @@ Grant
 .. _`Grant`:
 .. code-block:: python
 
-    parameters = ["scope", "claim", "resources", "authorization_details",
+    attributes = ["scope", "claim", "resources", "authorization_details",
                   "issued_token", "usage_rules", "revoked", "issued_at",
                   "expires_at"]
     type = "grant"
@@ -116,7 +116,7 @@ Code example:
 
     _new_code = Grant().from_json(_json_str)
 
-    for attr in Grant.parameters:
+    for attr in Grant.attributes:
         assert getattr(code, attr) == getattr(_new_code, attr)
 
 
@@ -262,3 +262,39 @@ Exchange Grant
 .. _ExchangeGrant:
 
 Subclass of Grant_ .
+
+.. code-block:: python
+
+    attributes = Grant.attributes
+    attributes.append("users")
+    type = "exchange_grant"
+
+    def __init__(self,
+                 scope: Optional[list] = None,
+                 claims: Optional[dict] = None,
+                 resources: Optional[list] = None,
+                 authorization_details: Optional[dict] = None,
+                 issued_token: Optional[list] = None,
+                 usage_rules: Optional[dict] = None,
+                 issued_at: int = 0,
+                 expires_in: int = 0,
+                 expires_at: int = 0,
+                 revoked: bool = False,
+                 token_map: Optional[dict] = None,
+                 users: list = None):
+
+The same set of attributes as for Grant_ except for *users* which is a list
+of entities that can use this exchange grant for minting new access tokens.
+Also the default usage rules for tokens this class can handle are:
+
+.. code-block:: python
+
+    {
+        "access_token": {
+            "supports_minting": ["access_token"],
+            "expires_in": 60
+        }
+    }
+
+This since exchange grant can ONLY mint new access tokens based on old access
+tokens.
