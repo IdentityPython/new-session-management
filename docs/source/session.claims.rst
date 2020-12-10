@@ -91,7 +91,7 @@ mapping is the intersection of these two sets.
 authorization subsystem. *usage* is which interface the claims are going to
 be used at. One of the interfaces_.
 
-As an example sssume the following configuration of the userinfo endpoint::
+As an example assume the following configuration of the userinfo endpoint::
 
     "userinfo": {
         "path": "userinfo",
