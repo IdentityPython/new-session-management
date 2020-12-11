@@ -49,9 +49,9 @@ Design criteria
 +++++++++++++++
 .. _`Design criteria`:
 
-So a session is defined by a user and a Relying Party. If one adds to that
-that a user can have several sessions active at the same time each one against
-a unique Relying Party we have the bases for session management.
+A session is defined by a user and a Relying Party. At the same time a 
+user can have also several sessions active at the same time on the same 
+Relying Party as well. This introduces us in the field of session management.
 
 Furthermore the user may well decide on different rules for different
 relying parties for releasing user
